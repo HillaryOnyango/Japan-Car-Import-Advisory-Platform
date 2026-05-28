@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: japan_car_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: japan_car_import_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  streamlit:
+    build: .
+    container_name: japan_car_streamlit
+    command: uv run streamlit run app/streamlit_app.py --server.address=0.0.0.0 --server.port=8501
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@postgres:5432/japan_car_import_db
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+      - uv_cache:/root/.cache/uv
+
+volumes:
+  postgres_data:
+  uv_cache:
