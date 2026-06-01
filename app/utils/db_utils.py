@@ -1,12 +1,10 @@
 import os
-import warnings
+from decimal import Decimal
 
 import pandas as pd
 import psycopg2
 import streamlit as st
 from dotenv import load_dotenv
-
-warnings.filterwarnings("ignore", category=UserWarning, module="pandas.io.sql")
 
 load_dotenv()
 
@@ -48,12 +46,21 @@ def load_listings(limit=1000):
             cleaned_at
         FROM cars_cleaned
         ORDER BY id DESC
-        LIMIT {int(limit)}
+        LIMIT %s
     """
 
     try:
         with get_connection() as conn:
-            df = pd.read_sql_query(query, conn)
+            with conn.cursor() as cur:
+                cur.execute(query, (int(limit),))
+                rows = cur.fetchall()
+                columns = [desc[0] for desc in cur.description]
+
+        df = pd.DataFrame(rows, columns=columns)
+
+        for col in df.columns:
+            if df[col].map(lambda x: isinstance(x, Decimal)).any():
+                df[col] = pd.to_numeric(df[col], errors="coerce")
 
         numeric_cols = ["year", "mileage", "engine_size_cc", "price_usd", "price_kes"]
         for col in numeric_cols:
@@ -61,6 +68,7 @@ def load_listings(limit=1000):
                 df[col] = pd.to_numeric(df[col], errors="coerce")
 
         return df
+
     except Exception as e:
         st.warning(f"Could not load database data yet: {e}")
         return pd.DataFrame()
