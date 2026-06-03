@@ -3,7 +3,7 @@ name = "japan-car-import-advisory-platform"
 version = "0.1.0"
 description = "Data engineering and machine learning platform for comparing Japan car import costs with Kenyan local market prices."
 readme = "README.md"
-requires-python = ">=3.11,<3.12"
+requires-python = ">=3.11,<3.13"
 dependencies = [
     "beautifulsoup4>=4.12.3",
     "joblib>=1.4.2",
