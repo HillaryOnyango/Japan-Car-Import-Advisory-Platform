@@ -159,6 +159,18 @@ DEFAULT_SHIPPING_COST_USD
 DEFAULT_INSURANCE_RATE
 ```
 
+<img width="1847" height="928" alt="image" src="https://github.com/user-attachments/assets/e94de6e1-74dd-402d-a36f-421f741f0829" />
+
+
+<img width="1844" height="907" alt="image" src="https://github.com/user-attachments/assets/c826ae36-aeee-4be0-bfad-2eecd499add0" />
+
+
+<img width="1844" height="907" alt="image" src="https://github.com/user-attachments/assets/d83fa31e-3e70-4812-88ca-65f854e97f74" />
+
+<img width="1844" height="907" alt="image" src="https://github.com/user-attachments/assets/4fa829b2-fc8a-4edd-9326-19453ac4404a" />
+
+
+
 When running locally outside Docker, use a localhost database URL. When running inside Docker Compose, use the `postgres` service hostname.
 
 ## Notes on Scraping
