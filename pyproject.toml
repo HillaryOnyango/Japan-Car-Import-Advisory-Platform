@@ -38,3 +38,7 @@ src = ["app", "calculator", "config", "etl", "ml", "scrapers", "tests"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+
+
+[tool.poetry]
+package-mode = false
