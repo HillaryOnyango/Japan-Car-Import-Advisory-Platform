@@ -1,5 +1,6 @@
 import os
 from decimal import Decimal
+from pathlib import Path
 
 import pandas as pd
 import psycopg2
@@ -10,11 +11,13 @@ load_dotenv()
 
 USD_TO_KES = float(os.getenv("USD_TO_KES", "130"))
 
-DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_HOST = os.getenv("DB_HOST", "")
 DB_PORT = os.getenv("DB_PORT", "5432")
-DB_NAME = os.getenv("DB_NAME", "japan_car_import_db")
-DB_USER = os.getenv("DB_USER", "car_admin")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "1900")
+DB_NAME = os.getenv("DB_NAME", "")
+DB_USER = os.getenv("DB_USER", "")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+
+SAMPLE_DATA_PATH = Path("data/processed/cars_cleaned_sample.csv")
 
 
 def get_connection():
@@ -25,6 +28,18 @@ def get_connection():
         user=DB_USER,
         password=DB_PASSWORD,
     )
+
+
+def load_sample_data():
+    if SAMPLE_DATA_PATH.exists():
+        df = pd.read_csv(SAMPLE_DATA_PATH)
+
+        if "price_kes" not in df.columns and "price_usd" in df.columns:
+            df["price_kes"] = df["price_usd"] * USD_TO_KES
+
+        return df
+
+    return pd.DataFrame()
 
 
 @st.cache_data(ttl=300)
@@ -49,6 +64,9 @@ def load_listings(limit=1000):
         LIMIT %s
     """
 
+    if not DB_HOST or not DB_NAME or not DB_USER:
+        return load_sample_data().head(limit)
+
     try:
         with get_connection() as conn:
             with conn.cursor() as cur:
@@ -69,9 +87,8 @@ def load_listings(limit=1000):
 
         return df
 
-    except Exception as e:
-        st.warning(f"Could not load database data yet: {e}")
-        return pd.DataFrame()
+    except Exception:
+        return load_sample_data().head(limit)
 
 
 def format_kes(value):

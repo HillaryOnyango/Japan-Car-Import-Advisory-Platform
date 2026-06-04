@@ -1,0 +1,11 @@
+make,model,year,mileage,engine_size_cc,fuel_type,transmission,body_type,source_platform,price_usd,price_kes
+Toyota,Harrier,2020,58000,2000,Petrol,AT,SUV,BE FORWARD,14500,1885000
+Toyota,RAV4,2019,72000,2000,Petrol,AT,SUV,BE FORWARD,15800,2054000
+Mazda,CX-5,2018,81000,2200,Diesel,AT,SUV,SBT Japan,12200,1586000
+Nissan,X-Trail,2019,69000,2000,Petrol,AT,SUV,SBT Japan,11700,1521000
+Subaru,Forester,2020,64000,2000,Petrol,AT,SUV,BE FORWARD,14900,1937000
+Honda,Vezel,2021,47000,1500,Hybrid,AT,SUV,SBT Japan,13200,1716000
+Toyota,Corolla,2021,50000,1800,Petrol,AT,Sedan,BE FORWARD,8000,1040000
+Mercedes-Benz,C-Class,2019,62000,2000,Petrol,AT,Sedan,SBT Japan,21000,2730000
+BMW,3 Series,2020,55000,2000,Petrol,AT,Sedan,BE FORWARD,19500,2535000
+Audi,A4,2019,60000,2000,Petrol,AT,Sedan,SBT Japan,18500,2405000
