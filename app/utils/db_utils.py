@@ -17,7 +17,16 @@ DB_NAME = os.getenv("DB_NAME", "")
 DB_USER = os.getenv("DB_USER", "")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 
-SAMPLE_DATA_PATH = Path("data/processed/cars_cleaned_sample.csv")
+SAMPLE_DATA_PATH = Path(__file__).resolve().parents[2] / "data" / "processed" / "cars_cleaned_sample.csv"
+
+
+def load_sample_data():
+    df = pd.read_csv(SAMPLE_DATA_PATH)
+
+    if "price_kes" not in df.columns and "price_usd" in df.columns:
+        df["price_kes"] = df["price_usd"] * USD_TO_KES
+
+    return df
 
 
 def get_connection():
@@ -28,18 +37,6 @@ def get_connection():
         user=DB_USER,
         password=DB_PASSWORD,
     )
-
-
-def load_sample_data():
-    if SAMPLE_DATA_PATH.exists():
-        df = pd.read_csv(SAMPLE_DATA_PATH)
-
-        if "price_kes" not in df.columns and "price_usd" in df.columns:
-            df["price_kes"] = df["price_usd"] * USD_TO_KES
-
-        return df
-
-    return pd.DataFrame()
 
 
 @st.cache_data(ttl=300)
@@ -64,10 +61,10 @@ def load_listings(limit=1000):
         LIMIT %s
     """
 
-    if not DB_HOST or not DB_NAME or not DB_USER:
-        return load_sample_data().head(limit)
-
     try:
+        if not DB_HOST or DB_HOST in ["localhost", "127.0.0.1"]:
+            return load_sample_data().head(limit)
+
         with get_connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(query, (int(limit),))
@@ -84,6 +81,9 @@ def load_listings(limit=1000):
         for col in numeric_cols:
             if col in df.columns:
                 df[col] = pd.to_numeric(df[col], errors="coerce")
+
+        if df.empty:
+            return load_sample_data().head(limit)
 
         return df
 
