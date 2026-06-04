@@ -178,8 +178,11 @@ When running locally outside Docker, use a localhost database URL. When running 
 - SBT Japan and BE FORWARD can initially be handled using `requests` and `BeautifulSoup`.
 - CarFromJapan and AAA Japan may require Playwright, stealth techniques, or proxy services because of CAPTCHA/403 protection.
 - Always respect website terms of service and robots.txt.
-Here is the link to the project demo: 
-https://japan-car-import-advisory-platform.streamlit.app/
+
+- 
+Here is the link to the project demo:
+
+**https://japan-car-import-advisory-platform.streamlit.app/**
 
 ## Main Deliverables
 
