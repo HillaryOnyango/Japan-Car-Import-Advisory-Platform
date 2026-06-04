@@ -78,6 +78,8 @@ def clean_raw_to_cleaned():
           AND price_usd BETWEEN 3000 AND 80000
           AND make IS NOT NULL
           AND model IS NOT NULL
+          AND make ~ '[A-Za-z]'
+          AND make NOT IN ('30', '40', '50', '60', '70', '80', '90', '100')
           AND NOT EXISTS (
               SELECT 1
               FROM cars_cleaned c

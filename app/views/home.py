@@ -40,10 +40,22 @@ def render_home():
         st.info("No cleaned listings found yet. Run the scraper and ETL loader first.")
         return
 
-    st.subheader("Price Distribution by Make")
-    chart_df = df.dropna(subset=["make", "price_kes"])
-    chart_df = chart_df.groupby("make", as_index=False)["price_kes"].mean().sort_values(
-        "price_kes", ascending=False
-    ).head(15)
+    st.subheader("Price Distribution by Model")
 
-    st.bar_chart(chart_df.set_index("make"))
+    chart_df = df.dropna(subset=["model", "price_kes"]).copy()
+
+    # Remove bad numeric model labels such as "100", "30", "40"
+    chart_df = chart_df[
+        chart_df["model"]
+        .astype(str)
+        .str.contains(r"[A-Za-z]", regex=True, na=False)
+    ]
+
+    chart_df = (
+        chart_df.groupby("model", as_index=False)["price_kes"]
+        .mean()
+        .sort_values("price_kes", ascending=False)
+        .head(15)
+    )
+
+    st.bar_chart(chart_df.set_index("model"))
